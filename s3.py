@@ -29,6 +29,24 @@ def constructCNF(sArray):
 					print ((int(idI) * 81) + (int(idJ) * 9) + int(value)),
 					print 0
 
+		for idI, row in enumerate(sArray):
+			for idJ, value in enumerate(row):
+				for x in range(8):
+					if(idJ < 8):
+						clauseCount += 1
+						print (-1*((int(idI) * 81) + (int(idJ) * 9) + int(x) + 1)),
+						print (-1*((int(idI) * 81) + (int(idJ+1) * 9) + int(x) + 1)),
+						print 0
+
+		for idI, row in enumerate(sArray):
+			for idJ, value in enumerate(row):
+				for x in range(8):
+					if(idI < 8):
+						clauseCount += 1
+						print (-1*((int(idI) * 81) + (int(idJ) * 9) + int(x) + 1)),
+						print (-1*((int(idI+1) * 81) + (int(idJ) * 9) + int(x) + 1)),
+						print 0
+
 		print "p cnf %s %s" % (varCount, clauseCount)
 	else:
 		print "sArray not intialized correctly\n"
