@@ -46,7 +46,7 @@ def constructCNF(sArray):
 
 		for idI, row in enumerate(sArray):
 			for idJ, value in enumerate(row):
-				for x in range(8):
+				for x in range(9): #this damn 9
 					for y in range(8):
 						y += 1
 						if(idJ+y < 9 and idJ < 8):
@@ -57,7 +57,7 @@ def constructCNF(sArray):
 
 		for idI, row in enumerate(sArray):
 			for idJ, value in enumerate(row):
-				for x in range(8):
+				for x in range(9): #is a bitch
 					for y in range(8):
 						y += 1
 						if(idI+y < 9 and idI < 8):
