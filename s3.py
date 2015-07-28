@@ -31,13 +31,26 @@ def parseSolution():
 def constructCNF(sArray):
 
 	varCount = 0
-	clauseCount = 0
+	unitCount = 0
 
 	if sArray:
+		
 		for i, line in enumerate(sArray):
 			for j, value in enumerate(line):
 				if value not in ['0', '.', '*', '?']:
-					clauseCount += 1
+					unitCount += 1
+
+		print "p cnf 729 %s" % (unitCount+8829)
+
+		for i, line in enumerate(sArray):
+			for j, value in enumerate(line):
+				if value not in ['0', '.', '*', '?']:
+					print (((i)*81)+((j)*9)+int(value)),
+					print 0
+
+		for i, line in enumerate(sArray):
+			for j, value in enumerate(line):
+				if value not in ['0', '.', '*', '?']:
 					print (((i)*81)+((j)*9)+int(value)),
 					print 0
 
@@ -48,7 +61,6 @@ def constructCNF(sArray):
 				for k in range(9):
 					k += 1
 					print (((i-1)*81)+((j-1)*9)+k),
-				clauseCount += 1
 				print 0
 
 		for i in range(9):
@@ -59,7 +71,6 @@ def constructCNF(sArray):
 					j += 1
 					l = j + 1
 					while l <= 9:
-						clauseCount += 1
 						print (-1*(((i-1)*81)+((j-1)*9)+k)),
 						print (-1*(((i-1)*81)+((l-1)*9)+k)),
 						print 0
@@ -73,7 +84,6 @@ def constructCNF(sArray):
 					i += 1
 					l = i + 1
 					while l <= 9:
-						clauseCount += 1
 						print (-1*(((i-1)*81)+((j-1)*9)+k)),
 						print (-1*(((l-1)*81)+((j-1)*9)+k)),
 						print 0
@@ -89,7 +99,6 @@ def constructCNF(sArray):
 							v += 1
 							w = v + 1
 							while w <= 3:
-								clauseCount += 1
 								print (-1*((((3*a)+u-1) * 81) + (((3*b)+v-1) * 9) + k)),
 								print (-1*((((3*a)+u-1) * 81) + (((3*b)+w-1) * 9) + k)),
 								print 0
@@ -107,13 +116,11 @@ def constructCNF(sArray):
 							while w <= 3:
 								for t in range(3):
 									t += 1
-									clauseCount += 1
 									print (-1*((((3*a)+u-1) * 81) + (((3*b)+v-1) * 9) + k)),
 									print (-1*((((3*a)+w-1) * 81) + (((3*b)+t-1) * 9) + k)),
 									print 0
 								w +=1
 
-		print "p cnf 729 %s" %  clauseCount
 	else:
 		print "sArray not intialized correctly\n"
 
