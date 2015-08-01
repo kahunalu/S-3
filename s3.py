@@ -1,7 +1,16 @@
 import sys
 
-extended = False
-nk = 16
+'''
+CSC 320 Project
+
+K. Cole Funk V00709989
+
+Luke Mclaren V00763009
+
+'''
+
+extended = False # Extended option
+nk = 9 # Puzzle size
 
 def readFile():
 	global nk
@@ -69,11 +78,13 @@ def constructCNF(sArray):
 
 	if sArray:
 		
+		#count number of unit clauses
 		for i, line in enumerate(sArray):
 			for j, value in enumerate(line):
 				if value not in ['0', '.', '*', '?']:
 					unitCount += 1
 
+		#print cnf header to file
 		if(extended):
 			f.write("p cnf %s %s\n" % ((nk*nk*nk), unitCount+11988))
 		elif nk == 16:
@@ -81,13 +92,14 @@ def constructCNF(sArray):
 		else:
 			f.write("p cnf %s %s\n" % ((nk*nk*nk), unitCount+8829))
 
-
+		#unit clauses 
 		for i, line in enumerate(sArray):
 			for j, value in enumerate(line):
 				if value not in ['0', '.', '*', '?']:
 					f.write(str((((i)*(nk*nk))+((j)*nk)+int(value))))
 					f.write(" 0\n")
 
+		#Least one number per entry
 		for i in range(nk):
 			i += 1
 			for j in range(nk):
@@ -97,6 +109,7 @@ def constructCNF(sArray):
 					f.write(str((((i-1)*(nk*nk))+((j-1)*nk)+k))+" ")
 				f.write("0\n")
 
+		#Each number appears at most once per row
 		for i in range(nk):
 			i += 1
 			for k in range(nk):
@@ -110,6 +123,7 @@ def constructCNF(sArray):
 						f.write("0\n")
 						l +=1
 
+		#Each number appears at most once per column
 		for j in range(nk):
 			j += 1
 			for k in range(nk):
@@ -123,6 +137,7 @@ def constructCNF(sArray):
 						f.write("0\n")
 						l +=1
 
+		#Each number appears at most once in each nxn subgrid
 		for k in range(nk):
 			k +=1
 			for a in range(int(nk ** 0.5)):
@@ -142,9 +157,9 @@ def constructCNF(sArray):
 			k +=1
 			for a in range(int(nk ** 0.5)):
 				for b in range(int(nk ** 0.5)):			
-					for u in range (int(nk ** 0.5)-1):
+					for u in range(int(nk ** 0.5)-1):
 						u += 1
-						for v in range(int(nk ** 0.5)-1):
+						for v in range(int(nk ** 0.5)):
 							v += 1
 							w = u + 1
 							while w <= int(nk ** 0.5):
@@ -154,6 +169,8 @@ def constructCNF(sArray):
 									f.write(str((-1*((((int(nk ** 0.5)*a)+w-1) * (nk*nk)) + (((int(nk ** 0.5)*b)+t-1) * nk) + k)))+" ")
 									f.write("0\n")
 								w +=1
+
+		#Continue with extended coding if selected
 		if(extended):
 			extendedEncoding(f)
 
@@ -163,6 +180,7 @@ def constructCNF(sArray):
 def extendedEncoding(f):
 	global nk
 
+	# At most 1 number per entry
 	for x in range(9):
 		x += 1
 		for y in range(9):
@@ -176,6 +194,7 @@ def extendedEncoding(f):
 					f.write("0\n")
 					i +=1
 
+	# Each number appears at least once per row
 	for y in range(9):
 		y += 1
 		for z in range(9):
@@ -185,6 +204,7 @@ def extendedEncoding(f):
 				f.write(str(((x-1) * 81) + ((y-1) * 9) + z)+" ")
 			f.write("0\n")
 
+	# Each number appears at least once per column
 	for x in range(9):
 		x += 1
 		for z in range(9):
@@ -194,7 +214,7 @@ def extendedEncoding(f):
 				f.write(str(((x-1) * 81) + ((y-1) * 9) + z)+" ")
 			f.write("0\n")
 
-	
+	# Each number appears at least once per subgrid
 	for z in range(9):
 		z += 1
 		for i in range(3):
@@ -208,18 +228,24 @@ def extendedEncoding(f):
 
 def main():
 	global nk
+
+	#specify nk
 	if(len(sys.argv) == 4):
 		nk = int(sys.argv[3])
 
+	#specify nk and use extended
 	if(len(sys.argv) == 5):
 		nk = int(sys.argv[4])
 		if(sys.argv[3] == '-ex'):
 			global extended
 			extended = True
 
+	# create cnf input file for miniSAT
 	if(sys.argv[2] == '-cnf'):
-		sArray = readFile() # Open sudoku file and parse into array
+		sArray = readFile()
 		constructCNF(sArray)
+
+	# parse miniSAT output solution
 	elif(sys.argv[2] == '-slv'):
 		parseSolution()
 
